@@ -66,6 +66,10 @@ Combining the two datasets - **enormous** number of possible input files.
 ---
 
 # Technologies
+- Python
+- PyTorch
+- CNN
+- Pre-trained models
 
 ---
 
