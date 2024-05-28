@@ -16,9 +16,16 @@ Teodor Kostadinov, 4MI0600097
 
 ---
 
+# Scrapped ideas
+
+1. [Connect 4 competing](https://www.kaggle.com/competitions/connectx/overview) model with Python code - **dynamically competing** with all other models in Kaggle.
+2. [Monet painting generation](https://www.kaggle.com/competitions/gan-getting-started/overview) - **generate** a painting **in Monet** style Kaggle competition.
+3. Whale sounds to type - classification, what type is the whale **by the sound**.
+---
+
 # Idea
 
-The purpose of this project is to attempt combining **two pre trained** models - a card **classification model** and an **image captioning model**. The expected result is to have a model that can **both find** and **identify the card** on an image taken from Google Maps street view.
+The purpose of this project is to attempt combining **two pre trained** models - a card **classification model** and an **image captioning model**. The expected result is to have a model that can **both find** and **identify the card** on an photograph showing wide variety of scenes.
 
 ---
 
@@ -77,6 +84,7 @@ Combining the two datasets - **enormous** number of possible input files.
 
 - Creating and labeling the input data.
 - Defining the exact output format that we want.
+- Training the model to search for the picture of a card.
 
 ---
 # Relevant papers
@@ -85,4 +93,4 @@ Combining the two datasets - **enormous** number of possible input files.
 - [Reusing Pretrained Models by Multi-linear Operators for Efficient Training](https://proceedings.neurips.cc/paper_files/paper/2023/file/09d9a13f7018110cfb439c06b07940a2-Paper-Conference.pdf)
 
 ---
-# Thank you
+# Thank you!
