@@ -82,7 +82,7 @@ Combining the two datasets - **enormous** number of possible input files.
 # Relevant papers
 - [Beyond a Pre-Trained Object Detector: Cross-Modal Textual and Visual Context for Image Captioning](https://openaccess.thecvf.com/content/CVPR2022/papers/Kuo_Beyond_a_Pre-Trained_Object_Detector_Cross-Modal_Textual_and_Visual_Context_CVPR_2022_paper.pdf)
 - [IMAGE CAPTION GENERATOR USING CONVOLUTIONAL NEURAL NETWORKS AND LONG SHORT-TERM MEMORY](https://www.researchgate.net/profile/Jameer-Kotwal/publication/377852268_IMAGE_CAPTION_GENERATOR_USING_CONVOLUTIONAL_NEURAL_NETWORKS_AND_LONG_SHORT-TERM_MEMORY/links/65bb6cdb1e1ec12eff684fd8/IMAGE-CAPTION-GENERATOR-USING-CONVOLUTIONAL-NEURAL-NETWORKS-AND-LONG-SHORT-TERM-MEMORY.pdf)
--[Reusing Pretrained Models by Multi-linear Operators for Efficient Training](https://proceedings.neurips.cc/paper_files/paper/2023/file/09d9a13f7018110cfb439c06b07940a2-Paper-Conference.pdf)
+- [Reusing Pretrained Models by Multi-linear Operators for Efficient Training](https://proceedings.neurips.cc/paper_files/paper/2023/file/09d9a13f7018110cfb439c06b07940a2-Paper-Conference.pdf)
 
 ---
 # Thank you
