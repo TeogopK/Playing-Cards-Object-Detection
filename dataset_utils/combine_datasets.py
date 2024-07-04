@@ -12,12 +12,11 @@ import shutil
 
 # NOTE: Change the directories to match the desired datasets
 MULTIPLIER = 10
-PARENT_DIR = '../data/test_data/' 
+PARENT_DIR = '../data'
 
-# Paths for the datasets
-dataset1_dir = f'{PARENT_DIR}/synthetic_dataset'
-dataset2_dir = f'{PARENT_DIR}/real_dataset'
-combined_dataset_dir = f'{PARENT_DIR}/combined'
+dataset1_dir = f'{PARENT_DIR}/real_dataset'
+dataset2_dir = f'{PARENT_DIR}/synthetic_dataset'
+combined_dataset_dir = f'{PARENT_DIR}/combined' # NOTE: Change the output dir if needed
 
 # Subfolders for train, test, val
 folders = ['train', 'test', 'valid']
@@ -26,9 +25,12 @@ subfolders = ['images', 'labels']
 # Create combined dataset directories
 for folder in folders:
     for subfolder in subfolders:
-        os.makedirs(os.path.join(combined_dataset_dir, folder, subfolder), exist_ok=True)
+        os.makedirs(os.path.join(combined_dataset_dir,
+                    folder, subfolder), exist_ok=True)
 
 # Function to copy files from source to destination
+
+
 def copy_files(src_dir, dest_dir, num_files):
     files = os.listdir(src_dir)
     files.sort()
@@ -37,6 +39,7 @@ def copy_files(src_dir, dest_dir, num_files):
         src_path = os.path.join(src_dir, file)
         dest_path = os.path.join(dest_dir, file)
         shutil.copy(src_path, dest_path)
+
 
 # Combine datasets
 for folder in folders:
