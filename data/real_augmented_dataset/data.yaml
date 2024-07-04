@@ -1,5 +1,5 @@
-train: C:\Users\Teodor.Kostadinov\UNI\Sem6\Tensorflow\Project\my_dataset_aug\train
-val: C:\Users\Teodor.Kostadinov\UNI\Sem6\Tensorflow\Project\my_dataset_aug\valid
+train: ../data/real_augmented_dataset/train
+val: ../data/real_augmented_dataset/val
 
 nc: 13
 names: [10h, 2h, 3h, 4h, 5h, 6h, 7h, 8h, 9h, Ah, Jh, Kh, Qh ]
