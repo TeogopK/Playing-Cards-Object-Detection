@@ -1,11 +1,11 @@
 # Code provided by Dipankar Medhi article https://dipankarmedh1.medium.com/real-time-object-detection-with-yolo-and-webcam-enhancing-your-computer-vision-skills-861b97c78993
 # Note press Q to stop the demo
 
+import math
 from ultralytics import YOLO
 import cv2
-import math
 
-CONFIGURATION_MODEL = "synthetic" # Switch to "tuned" to use the other model
+CONFIGURATION_MODEL = "synthetic"  # Switch to "tuned" to use the other model
 
 configuration_dict = {
     "synthetic": {
@@ -54,7 +54,8 @@ while True:
         for box in boxes:
             # Bounding box
             x1, y1, x2, y2 = box.xyxy[0]
-            x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # Convert to int values
+            x1, y1, x2, y2 = int(x1), int(y1), int(
+                x2), int(y2)  # Convert to int values
 
             # Put box in cam
             cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
@@ -78,11 +79,13 @@ while True:
             color = (255, 0, 0)
             thickness = 2
 
-            cv2.putText(img, class_name, org, font, fontScale, color, thickness)
+            cv2.putText(img, class_name, org, font,
+                        fontScale, color, thickness)
 
     # Display total score on the screen
     score_text = f"Total Score: {total_score}"
-    cv2.putText(img, score_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    cv2.putText(img, score_text, (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
     cv2.imshow('Webcam', img)
     if cv2.waitKey(1) == ord('q'):
