@@ -5,7 +5,7 @@ from ultralytics import YOLO
 import cv2
 import math
 
-CONFIGURATION = "synthetic"
+CONFIGURATION_MODEL = "synthetic" # Switch to "tuned" to use the other model
 
 configuration_dict = {
     "synthetic": {
@@ -18,7 +18,7 @@ configuration_dict = {
     }
 }
 
-current_config = configuration_dict.get(CONFIGURATION)
+current_config = configuration_dict.get(CONFIGURATION_MODEL)
 
 # Load the model and class names
 model = YOLO(current_config["model_path"])
