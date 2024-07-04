@@ -1,0 +1,61 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "10h"
+    },
+    {
+      "id": 1,
+      "name": "2h"
+    },
+    {
+      "id": 2,
+      "name": "3h"
+    },
+    {
+      "id": 3,
+      "name": "4h"
+    },
+    {
+      "id": 4,
+      "name": "5h"
+    },
+    {
+      "id": 5,
+      "name": "6h"
+    },
+    {
+      "id": 6,
+      "name": "7h"
+    },
+    {
+      "id": 7,
+      "name": "8h"
+    },
+    {
+      "id": 8,
+      "name": "9h"
+    },
+    {
+      "id": 9,
+      "name": "Ah"
+    },
+    {
+      "id": 10,
+      "name": "Jh"
+    },
+    {
+      "id": 11,
+      "name": "Kh"
+    },
+    {
+      "id": 12,
+      "name": "Qh"
+    }
+  ],
+  "info": {
+    "year": 2024,
+    "version": "1.0",
+    "contributor": "Label Studio"
+  }
+}
