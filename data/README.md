@@ -31,4 +31,5 @@ All of them fall under the [CC0: Public Domain](https://creativecommons.org/publ
 #### Notes
 
 - To use the datasets, one may need to replace the relative paths provided in the `data.yaml` file.
+- The provided`test.yaml` files have the same structure as the `data.yaml` ones but are used to execute the model on the test set. This is done by replacing the path to the validation set with the path to the test set.
 - All model runs has old project structure datasets path in the *args* configuration file.
