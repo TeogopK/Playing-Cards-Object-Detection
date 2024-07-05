@@ -10,15 +10,20 @@ by Teodor Kostadinov, 4MI0600097,
 Faculty of Mathematics and Informatics, Sofia University
 
 ---
+# Staging
 
-# Business idea
+_**Imagine** that you are a Software engineer with a great business idea..._
+
+---
+
+# The business idea
 
 Developing an application that can:
 - assist during a game of Blackjack, Bridge, Belot, Poker, etc.
 
 ---
 
-# Business idea
+# Plan
 
 To create the application a model recognizing the playing cards is required.
 A **fast implementation** of the required model is needed as soon as possible to develop the business!
@@ -68,7 +73,7 @@ Since the dataset is generated programmatically, there are obvious patterns.
 
 ---
 
-# Our YOLOv8_syntethic model
+# Our YOLOv8m_syntethic model
 
 - Trained on **YOLOv8 medium** using 10 epochs
 - Trained with **20 000 images** split 70/20/10 and 52 classes.
@@ -76,39 +81,39 @@ Since the dataset is generated programmatically, there are obvious patterns.
 - Can detect each card from the test set with **~99%** accuracy.
 
 ---
-# Our YOLOv8_synthetic model statistics
+# Our YOLOv8m_synthetic model statistics
 
 The results are impressive on paper:
 
 ![alt text](media/yolov8_synthethic.png)
 
 ---
-# Our YOLOv8_synthetic in practice
+# Our YOLOv8m_synthetic in practice
 
 Working pretty good on similar style pictures:
 
 ![alt text](media/yolov8_synthethic_example1.png)
 
 ---
-# Our YOLOv8_synthetic in practice
+# Our YOLOv8m_synthetic in practice
 
 ![alt text](media/yolov8_synthethic_example2.png)
 
 ---
-# Our YOLOv8_synthetic in practice
+# Our YOLOv8m_synthetic in practice
 
 ![alt text](media/yolov8_synthethic_example5.jpg)
 
 
 ---
-# Our YOLOv8_synthetic in practice
+# Our YOLOv8m_synthetic in practice
 
 When the images differ from the synthetic format the results drop as well:
 
 ![alt text](media/yolov8_synthethic_example3.png)
 
 ---
-# Our YOLOv8_synthetic in practice
+# Our YOLOv8m_synthetic in practice
 
 It can also detect printings of a train data but not other types of cards:
 
@@ -128,7 +133,7 @@ Captured and labeled **100** photos with different configurations of cards.
 ![h:500px](media/own_data_example.jpg)
 
 ---
-# Our YOLOv8_real model
+# Our YOLOv8m_real model
 
 - Trained on YOLOv8 medium using **100** epochs
 - Trained with **100 images** split 70/20/10 and 13 classes.
@@ -137,40 +142,40 @@ Captured and labeled **100** photos with different configurations of cards.
 
 
 ---
-# Our YOLOv8_real model statistics
+# Our YOLOv8m_real model statistics
 
 The results are impressive on paper:
 
 ![alt text](media/yolov8_real_results.png)
 
 ---
-# Our YOLOv8_real on test set
+# Our YOLOv8m_real on test set
 
 The test set is not perfect, there are a handful of mistakes. 
 
 ![h:500px](media/yolov8_real_predictions.jpg)
 
 ---
-# Our YOLOv8_real in practice
+# Our YOLOv8m_real in practice
 
-It is doing ok on images with Hearts, but not as good as YOLOv8_synthetic
+It is doing ok on images with Hearts, but not as good as YOLOv8m_synthetic
 
 ![alt text](media/yolov8_real_example1.jpg)
 
 ---
-# Our YOLOv8_real in practice
+# Our YOLOv8m_real in practice
 
 ![h:500px](media/yolov8_real_example3.jpg)
 
 ---
-# Our YOLOv8_real in practice
+# Our YOLOv8m_real in practice
 
 However, it does confuse other suits for Hearts.
 
 ![alt text](media/yolov8_real_example2.jpg)
 
 ---
-# Our YOLOv8_real in practice
+# Our YOLOv8m_real in practice
 
 ![h:500px](media/yolov8_real_example4.jpg)
 
@@ -187,7 +192,7 @@ The library used to transform the marked bounding boxes in the original dataset 
 ![h:600px](media/augmented_data_example.png)
 
 ---
-# Our YOLOv8_aug model
+# Our YOLOv8m_aug model
 
 - Trained on YOLOv8 medium using **100** epochs
 - Trained with **1000 images** split 70/20/10 and 13 classes.
@@ -196,21 +201,21 @@ The library used to transform the marked bounding boxes in the original dataset 
 
 
 ---
-# Our YOLOv8_aug model statistics
+# Our YOLOv8m_aug model statistics
 
-Observing similar mAP50 and mAP50-95 percents as YOLOv8_real.
+Observing similar mAP50 and mAP50-95 percents as YOLOv8m_real.
 
 ![alt text](media/yolov8_aug_results.png)
 
 ---
-# Our YOLOv8_aug on test set
+# Our YOLOv8m_aug on test set
 
 It is still making similar mistakes to the previous model:
 
 ![h:500px](media/yolov8_aug_predictions.jpg)
 
 ---
-# Our YOLOv8_aug in practice
+# Our YOLOv8m_aug in practice
 
 It still does not detect the Ace, loses the King though.
 
@@ -225,7 +230,7 @@ Developed a script the **relabels** all 52 classes **to the 13** from the "real"
 
 
 ---
-# Our YOLOv8_comb model
+# Our YOLOv8m_comb model
 
 - Trained on YOLOv8 medium using **100** epochs
 - Trained with **1100 images** split 70/20/10 and 13 classes.
@@ -233,19 +238,19 @@ Developed a script the **relabels** all 52 classes **to the 13** from the "real"
 - Results are worse than the synthetic model.
 
 ---
-# Our YOLOv8_comb model statistics
+# Our YOLOv8m_comb model statistics
 
 ![alt text](media/yolov8_comb_results.png)
 
 ---
-# Our YOLOv8_comb on test set
+# Our YOLOv8m_comb on test set
 
 It is doing fine on the test set, detecting only Hearts.
 
 ![h:500px](media/yolov8_comb_predictions.jpg)
 
 ---
-# Our YOLOv8_comb in practice
+# Our YOLOv8m_comb in practice
 
 Doing similarly to the other models in some situations.
 
@@ -253,7 +258,7 @@ Doing similarly to the other models in some situations.
 
 ---
 
-# Our YOLOv8_comb in practice
+# Our YOLOv8m_comb in practice
 
 The model managed to detect the Ace, but not the King:
 
@@ -261,19 +266,19 @@ The model managed to detect the Ace, but not the King:
 
 ---
 
-# Our YOLOv8_comb in practice
+# Our YOLOv8m_comb in practice
 
 There are definite examples that the model is not better than the others.
 
 ![h:500px](media/yolov8_comb_example3.jpg)
 
 ---
-# Retraining the synthetic YOLOv8_synth model
+# Retraining the synthetic YOLOv8m_synth model
 
-Using the well-performing YOLOv8_synth as **base model** to **fine-tune** the model on the Hearts dataset with **13 classes**.
+Using the well-performing YOLOv8m_synth as **base model** to **fine-tune** the model on the Hearts dataset with **13 classes**.
 
 ---
-# Our YOLOv8_tuned model
+# Our YOLOv8m_tuned model
 
 - Trained on YOLOv8 medium using **100** epochs
 - Pretrained with **20 000 images** and 52 classes.
@@ -282,19 +287,19 @@ Using the well-performing YOLOv8_synth as **base model** to **fine-tune** the mo
 
 
 ---
-# Our YOLOv8_tuned model statistics
+# Our YOLOv8m_tuned model statistics
 
 ![alt text](media/yolov8_tuned_results.png)
 
 ---
-# Our YOLOv8_tuned on test set
+# Our YOLOv8m_tuned on test set
 
 
 ![h:500px](media/yolov8_tuned_predictions.jpg)
 
 ---
 
-# Our YOLOv8_tuned in practice
+# Our YOLOv8m_tuned in practice
 
 The model finally detects the Ace of hearts, but still mistakes other suits for Hearts.
 
@@ -302,7 +307,7 @@ The model finally detects the Ace of hearts, but still mistakes other suits for 
 
 ---
 
-# Our YOLOv8_tuned in practice
+# Our YOLOv8m_tuned in practice
 
 An improvement on the total number of Hearts recognized when the cards are stacked.
 
@@ -310,7 +315,7 @@ An improvement on the total number of Hearts recognized when the cards are stack
 
 ---
 
-# Our YOLOv8_tuned in practice
+# Our YOLOv8m_tuned in practice
 
 Good recognition between red and black cards.
 
@@ -318,7 +323,7 @@ Good recognition between red and black cards.
 
 ---
 
-# Our YOLOv8_tuned in practice
+# Our YOLOv8m_tuned in practice
 
 Example of **similar** recognition compared to the base synthetic model: 
 
@@ -326,7 +331,7 @@ Example of **similar** recognition compared to the base synthetic model:
 
 ---
 
-# Our YOLOv8_tuned in practice
+# Our YOLOv8m_tuned in practice
 
 Example of **worse** recognition than the base synthetic model:
 
@@ -351,7 +356,7 @@ Example of **worse** recognition than the base synthetic model:
 
 # Positive examples
 
-**YOLOv8_comb** manages to find the Heart:
+**YOLOv8m_comb** manages to find the Heart:
 
 ![h:500px](media/positive_comb.jpg)
 
@@ -359,7 +364,7 @@ Example of **worse** recognition than the base synthetic model:
 
 # Positive examples
 
-**YOLOv8_tuned** manages to find the Heart and the printed Ace of Hearts:
+**YOLOv8m_tuned** manages to find the Heart and the printed Ace of Hearts:
 
 ![h:500px](media/positive_tuned.jpg)
 
