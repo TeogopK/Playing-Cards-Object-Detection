@@ -1,5 +1,5 @@
-train: ../data/real_dataset/train
-val: ../data/real_dataset/val
+train: train
+val: valid
 
 nc: 13
 names: [10h, 2h, 3h, 4h, 5h, 6h, 7h, 8h, 9h, Ah, Jh, Kh, Qh ]
