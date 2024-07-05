@@ -52,7 +52,7 @@ The table summarizes the models, datasets, epochs, and training times on *NVIDIA
 | [YOLOv8m_comb](./runs/YOLOv8m_comb)      | 100 real + 1,000 synthetic   | 100    | 50 minutes |
 | [YOLOv8m_tuned](./runs/YOLOv8m_tuned)     | 100 real images (fine-tuned) | 100    | 10 minutes |
 
-The best models are presented in the directory [final_models](./final_models). They are extracted from each models `train/weights/best.pt`.
+The best models are presented as pretrained files in the directory [final_models](./final_models). They are extracted from each models `train/weights/best.pt` to be used in the live demo application.
 
 ## Live demo application
 
@@ -81,3 +81,10 @@ Alternatively use your IDE GUI to start the application. The app will use a defa
 
 To quit the program press `q` on your keyboard.
 
+## Presentations and research paper
+
+The *presentations* folder consists of all materials required for creating and managing the presentations, including markdown files and media files.
+
+The [final presentation](./presentations/presentation_final/presentation_Teodor_Kostadinov.pdf) includes detailed information, extracted metrics and test images. 
+
+The main points are available in the [research paper]() as well.
