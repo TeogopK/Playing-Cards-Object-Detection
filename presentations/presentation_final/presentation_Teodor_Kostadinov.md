@@ -53,7 +53,7 @@ There is no time to create a big dataset, with well-designed examples for traini
 ---
 # Finding a dataset
 
-A person, facing the same problem, has created a syntethic dataset with over 20,000 images. [Link](https://www.kaggle.com/datasets/andy8744/playing-cards-object-detection-dataset) to dataset in kaggle
+A person, facing the same problem, has created a synthetic dataset with over 20,000 images. [Link](https://www.kaggle.com/datasets/andy8744/playing-cards-object-detection-dataset) to dataset in kaggle
 
 > First I took 20-30 second videos of all 52 cards under variable light temperature and brightness. The images were processed with open-cv. The DTD dataset (https://www.robots.ox.ac.uk/~vgg/data/dtd/) was used to simulate backgrounds of various textures for our dataset.
 
@@ -73,7 +73,7 @@ Since the dataset is generated programmatically, there are obvious patterns.
 
 ---
 
-# Our YOLOv8m_syntethic model
+# Our YOLOv8m_synthetic model
 
 - Trained on **YOLOv8 medium** using 10 epochs
 - Trained with **20 000 images** split 70/20/10 and 52 classes.
