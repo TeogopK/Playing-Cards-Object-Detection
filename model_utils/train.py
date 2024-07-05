@@ -1,4 +1,6 @@
-"""Performs training with the specified pretrained model and dataset yaml configuration file"""
+"""
+Performs training with the specified pretrained model and dataset yaml configuration file.
+"""
 from ultralytics import YOLO
 
 
