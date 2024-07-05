@@ -1,11 +1,13 @@
-# Code provided by Dipankar Medhi article https://dipankarmedh1.medium.com/real-time-object-detection-with-yolo-and-webcam-enhancing-your-computer-vision-skills-861b97c78993
+# Base code provided by Dipankar Medhi article https://dipankarmedh1.medium.com/real-time-object-detection-with-yolo-and-webcam-enhancing-your-computer-vision-skills-861b97c78993
 # Note press Q to stop the demo
 
 import math
+import sys
 from ultralytics import YOLO
 import cv2
 
-CONFIGURATION_MODEL = "synthetic"  # Switch to "tuned" to use the other model
+# Change to 'tuned' to use it as the default one
+DEFAULT_MODEL = 'synthetic'
 
 configuration_dict = {
     "synthetic": {
@@ -18,7 +20,15 @@ configuration_dict = {
     }
 }
 
-current_config = configuration_dict.get(CONFIGURATION_MODEL)
+print("Loading application...")
+
+configuration_model = sys.argv[1] if len(sys.argv) >= 2 else DEFAULT_MODEL
+
+if configuration_model not in configuration_dict.keys():
+    print(f"Allowed parameters for model are {configuration_dict.keys()}. Defaulting to {DEFAULT_MODEL}...")
+    configuration_model = DEFAULT_MODEL
+
+current_config = configuration_dict.get(configuration_model)
 
 # Load the model and class names
 model = YOLO(current_config["model_path"])
@@ -40,6 +50,8 @@ card_values = {
     'Jc': 10, 'Jd': 10, 'Jh': 10, 'Js': 10, 'Kc': 10, 'Kd': 10, 'Kh': 10, 'Ks': 10,
     'Qc': 10, 'Qd': 10, 'Qh': 10, 'Qs': 10
 }
+
+window_title = f"Playing Cards Detection - Model: {configuration_model}"
 
 while True:
     success, img = cap.read()
@@ -87,7 +99,7 @@ while True:
     cv2.putText(img, score_text, (10, 30),
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-    cv2.imshow('Webcam', img)
+    cv2.imshow(window_title, img)
     if cv2.waitKey(1) == ord('q'):
         break
 

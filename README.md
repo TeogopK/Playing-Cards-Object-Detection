@@ -1,14 +1,10 @@
 # Playing-Cards-Object-Detection
 
-This repository contains the code and datasets used for training and evaluating various YOLOv8 models for playing cards object detection. The project includes synthetic and real datasets, augmentation scripts, and trained models.
-
-## Overview
-
-The goal of this project is to detect and classify playing cards using object detection models. The datasets and models are organized to facilitate easy training, validation, and testing.
+This repository encapsulates the whole process of training and evaluating various YOLOv8 models for playing cards object detection, including datasets, code for training, utility functions, presentations and research paper materials, the model themselves and live demo application with the best models.
 
 ## Datasets
 
-Playing cards datasets used during the training of the models.
+All playing cards datasets used during the training of the models are available in the [data](./data) directory.
 All datasets are in YOLOv8 object detection format, split on *train, valid and test* directories with *labels* and *images* subdirectories.
 All of them fall under the [CC0: Public Domain](https://creativecommons.org/publicdomain/zero/1.0/) license.
 
@@ -39,7 +35,7 @@ All of them fall under the [CC0: Public Domain](https://creativecommons.org/publ
 #### Notes
 
 - To use the datasets, one may need to replace the relative paths provided in the `data.yaml` file.
-- The provided`test.yaml` files have the same structure as the `data.yaml` ones but are used to execute the model on the test set. This is done by replacing the path to the validation set with the path to the test set.
+- The provided `test.yaml` files have the same structure as the `data.yaml` ones but are used to execute the model on the test set. This is done by replacing the path to the validation set with the path to the test set.
 - All model runs has old project structure datasets path in the *args* configuration file.
 
 ## Models
@@ -56,4 +52,32 @@ The table summarizes the models, datasets, epochs, and training times on *NVIDIA
 | [YOLOv8m_comb](./runs/YOLOv8m_comb)      | 100 real + 1,000 synthetic   | 100    | 50 minutes |
 | [YOLOv8m_tuned](./runs/YOLOv8m_tuned)     | 100 real images (fine-tuned) | 100    | 10 minutes |
 
-The best models are presented in the directory [final_models](./final_models). They are extracted from each models `'train/weights/best.pt'`.
+The best models are presented in the directory [final_models](./final_models). They are extracted from each models `train/weights/best.pt`.
+
+## Live demo application
+
+The live demo application integrates the best performing models to detect the cards using the machine web cam.
+
+To run the application create an environment using:
+```bash
+python -m venv env
+```
+
+Then install all requirements specified in the *requirements.txt* file using.:
+```bash
+pip install -r requirements.txt
+```
+
+Some of these requirements are required for running the utility functions and not just the application.
+
+---
+
+There are two models that the application can use - *YOLOv8m_synthetic* and *YOLOv8m_tuned*. Run the program specifying the model using:
+```bash
+python demo_application/visualization.py <synthetic_or_tuned>
+```
+
+Alternatively use your IDE GUI to start the application. The app will use a default value for the model parameter
+
+To quit the program press `q` on your keyboard.
+
