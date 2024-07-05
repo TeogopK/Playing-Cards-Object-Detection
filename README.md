@@ -87,4 +87,4 @@ The *presentations* folder consists of all materials required for creating and m
 
 The [final presentation](./presentations/presentation_final/presentation.pdf) includes detailed information, extracted metrics and test images. 
 
-The main points are available in the [research paper]() as well.
+The main points are available in the [research paper](./presentations/research_paper/playing_cards_object_detection_yolov8.pdf) as well.
