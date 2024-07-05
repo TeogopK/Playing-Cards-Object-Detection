@@ -83,8 +83,8 @@ To quit the program press `q` on your keyboard.
 
 ## Presentations and research paper
 
-The *presentations* folder consists of all materials required for creating and managing the presentations, including markdown files and media files.
+The *presentations* folder consists of all materials required for creating and managing the presentations and research paper, including markdown, latex and media files.
 
-The [final presentation](./presentations/presentation_final/presentation_Teodor_Kostadinov.pdf) includes detailed information, extracted metrics and test images. 
+The [final presentation](./presentations/presentation_final/presentation.pdf) includes detailed information, extracted metrics and test images. 
 
 The main points are available in the [research paper]() as well.
