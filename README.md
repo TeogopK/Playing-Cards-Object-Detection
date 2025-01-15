@@ -44,13 +44,13 @@ Within the [runs](./runs) directory, you'll find all the data extracted from the
 
 The table summarizes the models, datasets, epochs, and training times on *NVIDIA RTX A2000 8GB*:
 
-| Model | Dataset | Epochs | Training Time |
-| --- | --- | ---- | ---- |
-| [YOLOv8m_synthetic](./runs/YOLOv8m_synthetic) | 20,000 synthetic images      | 10     | 2 hours    |
-| [YOLOv8m_real](./runs/YOLOv8m_real)      | 100 real images              | 100    | 20 minutes |
-| [YOLOv8m_aug](./runs/YOLOv8m_aug)       | 1,000 augmented images       | 100    | 40 minutes |
-| [YOLOv8m_comb](./runs/YOLOv8m_comb)      | 100 real + 1,000 synthetic   | 100    | 50 minutes |
-| [YOLOv8m_tuned](./runs/YOLOv8m_tuned)     | 100 real images (fine-tuned) | 100    | 10 minutes |
+| Model                                         | Dataset                      | Epochs | Training Time |
+| --------------------------------------------- | ---------------------------- | ------ | ------------- |
+| [YOLOv8m_synthetic](./runs/YOLOv8m_synthetic) | 20,000 synthetic images      | 10     | 2 hours       |
+| [YOLOv8m_real](./runs/YOLOv8m_real)           | 100 real images              | 100    | 20 minutes    |
+| [YOLOv8m_aug](./runs/YOLOv8m_aug)             | 1,000 augmented images       | 100    | 40 minutes    |
+| [YOLOv8m_comb](./runs/YOLOv8m_comb)           | 100 real + 1,000 synthetic   | 100    | 50 minutes    |
+| [YOLOv8m_tuned](./runs/YOLOv8m_tuned)         | 100 real images (fine-tuned) | 100    | 10 minutes    |
 
 The best models are presented as pretrained files in the directory [final_models](./final_models). They are extracted from each models `train/weights/best.pt` to be used in the live demo application.
 
@@ -69,6 +69,26 @@ pip install -r requirements.txt
 ```
 
 Some of these requirements are required for running the utility functions and not just the application.
+
+Note that to use CUDA after installing it, check your version using:
+
+```bash
+nvcc --version
+```
+
+Then proceed to download the [correct pytorch version](https://pytorch.org/get-started/locally/) e.g.:
+
+```bash
+pip uninstall torch   
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+```
+
+This should enable CUDA.
+
+```python
+import torch
+torch.cuda.is_available()
+```
 
 ---
 
