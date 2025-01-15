@@ -21,7 +21,7 @@ intel-openmp==2021.4.0
 ipykernel==6.29.5
 ipython==8.12.3
 jedi==0.19.1
-jinja2==3.1.4
+jinja2>=3.1.5
 jupyter-client==8.6.2
 jupyter-core==5.7.2
 kiwisolver==1.4.5
@@ -65,7 +65,7 @@ tbb==2021.13.0
 tifffile==2023.7.10
 torch==2.3.1
 torchvision==0.18.1
-tornado==6.4.1
+tornado>=6.4.2
 tqdm==4.66.4
 traitlets==5.14.3
 typing-extensions==4.12.2
