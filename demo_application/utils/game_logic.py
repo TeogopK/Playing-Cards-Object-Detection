@@ -81,13 +81,27 @@ class Card:
         return f"{self.value.value}{self.suit.value}"
 
 
+class TeamScore:
+    def __init__(self):
+        self.total_score = 0
+        self.cards_for_all_rounds = []
+        self.scores = []
+
+    def update_round(self, card_current_round, score):
+        self.cards_for_all_rounds.append(card_current_round)
+        self.scores.append(score)
+        self.total_score += score
+
+
 class Game:
 
     def __init__(self, game_mode=None):
         self.cards = []
-        self.game_mode = game_mode
+        self.game_mode = GameMode.NO_TRUMPS if game_mode is None else game_mode
         self.generate_all_cards()
         self.last_take_points = 10
+
+        self.team_scores = [TeamScore(), TeamScore()]
 
     def change_gamemode(self, game_mode):
         self.game_mode = game_mode
@@ -106,15 +120,6 @@ class Game:
             return trump_value_class[card.value.name].value
         else:
             return non_trump_value_class[card.value.name].value
-
-    def return_sorted_cards(self):
-        """
-        Return sorted cards based on game mode.
-        Return the trump suits in the order: trump_cards_order = ["J", "9", "A", "10", "K", "Q", "8", "7"]
-        All non-trump suits in the order: notrump_cards_order = ["A", "10", "K", "Q", "J", "9", "8", "7"]
-        """
-        trump_cards_order = ["J", "9", "A", "10", "K", "Q", "8", "7"]
-        notrump_cards_order = ["A", "10", "K", "Q", "J", "9", "8", "7"]
 
     def sort_by_gamevalue(self):
         self.cards.sort(key=self.get_card_gamevalue, reverse=True)
@@ -149,6 +154,18 @@ class Game:
         return sum([self.get_card_gamevalue(card) for card in taken_cards]) + (
             self.last_take_points if has_taken_last else 0
         )
+
+    def add_current_round_scores(self, taken_cards, team_index=0, has_taken_last=False):
+        score = self.get_score(taken_cards, has_taken_last)
+        self.team_scores[team_index].update_round(taken_cards, score)
+
+        enemy_team_score = self.get_max_score() - score
+        enemy_cards = [card for card in self.cards if card not in taken_cards]
+
+        self.team_scores[1 - team_index].update_round(enemy_cards, enemy_team_score)
+
+    def get_team_score(self, team_index=0):
+        return self.team_scores[team_index].total_score
 
 
 g = Game(GameMode.NO_TRUMPS)
