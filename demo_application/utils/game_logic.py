@@ -81,30 +81,72 @@ class Card:
         return f"{self.value.value}{self.suit.value}"
 
 
+class EndHand:
+    def __init__(self, cards, points, game_mode, has_last_hand=False, bonuses_points=0):
+        self.cards = cards
+        self.points = points
+
+        self.has_last_hand = has_last_hand
+        self.bonuses_points = bonuses_points
+        self.game_mode = game_mode
+
+        self.belotscore = self.convert_points_to_belotscore() + bonuses_points
+
+    def convert_points_to_belotscore(self):
+        total_points = self.points
+        if self.game_mode == GameMode.NO_TRUMPS:
+            total_points *= 2
+
+        last_digit = total_points % 10
+        belotscore = total_points // 10
+
+        if self.game_mode == GameMode.ALL_TRUMPS:
+            print("All trumps")
+            if last_digit >= 4:
+                belotscore += 1
+        elif self.game_mode == GameMode.NO_TRUMPS:
+            print("No trumps")
+            if last_digit >= 5:
+                belotscore += 1
+        else:
+            print("Specific suit")
+            if last_digit >= 6:
+                belotscore += 1
+
+        return belotscore
+
+
 class TeamScore:
     def __init__(self):
-        self.total_score = 0
-        self.cards_for_all_rounds = []
-        self.scores = []
+        self.total_belotscore = 0
+        self.hands = []
 
-    def update_round(self, card_current_round, score):
-        self.cards_for_all_rounds.append(card_current_round)
-        self.scores.append(score)
-        self.total_score += score
+    def update_round(self, end_hand):
+        self.total_belotscore += end_hand.belotscore
+        self.hands.append(end_hand)
+
+    def get_total_rounds(self):
+        return len(self.hands)
+
+    def get_last_hand(self):
+        return self.hands[-1].cards if self.hands else []
 
 
 class Game:
 
     def __init__(self, game_mode=None):
         self.cards = []
-        self.game_mode = GameMode.NO_TRUMPS if game_mode is None else game_mode
+        self.game_mode = None
         self.generate_all_cards()
         self.last_take_points = 10
 
         self.team_scores = [TeamScore(), TeamScore()]
+        game_mode_argument = GameMode.ALL_TRUMPS if game_mode is None else game_mode
+        self.change_gamemode(game_mode_argument)
 
     def change_gamemode(self, game_mode):
         self.game_mode = game_mode
+        self.cards = self.sort_cards(self.cards)
 
     def generate_all_cards(self):
         for suit in Suit:
@@ -121,15 +163,15 @@ class Game:
         else:
             return non_trump_value_class[card.value.name].value
 
-    def sort_by_gamevalue(self):
-        self.cards.sort(key=self.get_card_gamevalue, reverse=True)
-        return self.cards
+    def sort_by_gamevalue(self, cards_to_sort):
+        cards_to_sort.sort(key=self.get_card_gamevalue, reverse=True)
+        return cards_to_sort
 
-    def sort_by_ordervalue(self):
-        self.cards.sort(key=lambda x: self.get_card_gamevalue(x, CardTrumpOrder, CardNonTrumpOrder))
-        return self.cards
+    def sort_by_ordervalue(self, cards_to_sort):
+        cards_to_sort.sort(key=lambda x: self.get_card_gamevalue(x, CardTrumpOrder, CardNonTrumpOrder))
+        return cards_to_sort
 
-    def sort_by_suit(self):
+    def sort_by_suit(self, cards_to_sort):
         suit_order = [Suit.SPADES, Suit.HEARTS, Suit.DIAMONDS, Suit.CLUBS]
 
         def suit_sort_key(card):
@@ -138,36 +180,37 @@ class Game:
             else:
                 return (1, suit_order.index(card.suit))
 
-        self.cards.sort(key=suit_sort_key)
+        cards_to_sort.sort(key=suit_sort_key)
         return self.cards
 
-    def sort_cards(self):
-        self.sort_by_ordervalue()
-        self.sort_by_suit()
+    def sort_cards(self, cards_to_sort):
+        self.sort_by_ordervalue(cards_to_sort)
+        self.sort_by_suit(cards_to_sort)
 
-        return self.cards
+        return cards_to_sort
 
-    def get_max_score(self):
+    def get_max_points(self):
         return sum([self.get_card_gamevalue(card) for card in self.cards]) + self.last_take_points
 
-    def get_score(self, taken_cards, has_taken_last=False):
+    def get_points(self, taken_cards, has_taken_last=False):
         return sum([self.get_card_gamevalue(card) for card in taken_cards]) + (
             self.last_take_points if has_taken_last else 0
         )
 
-    def add_current_round_scores(self, taken_cards, team_index=0, has_taken_last=False):
-        score = self.get_score(taken_cards, has_taken_last)
-        self.team_scores[team_index].update_round(taken_cards, score)
+    def add_current_round_points(
+        self, taken_cards, team_index=0, has_taken_last=False, bonuses_points=0, enemy_bonuses_points=0
+    ):
+        current_team_points = self.get_points(taken_cards, has_taken_last)
+        current_team_hand = EndHand(taken_cards, current_team_points, self.game_mode, has_taken_last, bonuses_points)
+        self.team_scores[team_index].update_round(current_team_hand)
 
-        enemy_team_score = self.get_max_score() - score
+        enemy_team_points = self.get_max_points() - current_team_points
         enemy_cards = [card for card in self.cards if card not in taken_cards]
+        enemy_team_hand = EndHand(
+            enemy_cards, enemy_team_points, self.game_mode, not has_taken_last, enemy_bonuses_points
+        )
 
-        self.team_scores[1 - team_index].update_round(enemy_cards, enemy_team_score)
+        self.team_scores[1 - team_index].update_round(enemy_team_hand)
 
-    def get_team_score(self, team_index=0):
-        return self.team_scores[team_index].total_score
-
-
-g = Game(GameMode.NO_TRUMPS)
-print(g.sort_cards())
-print(g.get_max_score())
+    def get_team_points(self, team_index=0):
+        return self.team_scores[team_index].total_belotscore
