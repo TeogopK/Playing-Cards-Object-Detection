@@ -78,7 +78,18 @@ class Card:
         self.suit = suit
 
     def __repr__(self):
-        return f"{self.value.value}{self.suit.value}"
+        return f"{self.value.value}{self._get_suit_symbol()}"
+
+    def __str__(self):
+        return f"{self.value.value}{self._get_suit_symbol()}"
+
+    def _get_suit_symbol(self):
+        return {
+            Suit.SPADES: "♠️",
+            Suit.HEARTS: "♥️",
+            Suit.DIAMONDS: "♦️",
+            Suit.CLUBS: "♣️",
+        }[self.suit]
 
 
 class EndHand:
@@ -119,10 +130,12 @@ class EndHand:
 class TeamScore:
     def __init__(self):
         self.total_belotscore = 0
+        self.belotscore_history = [0]
         self.hands = []
 
     def update_round(self, end_hand):
         self.total_belotscore += end_hand.belotscore
+        self.belotscore_history.append(self.total_belotscore)
         self.hands.append(end_hand)
 
     def get_total_rounds(self):
@@ -197,6 +210,9 @@ class Game:
             self.last_take_points if has_taken_last else 0
         )
 
+    def get_other_cards(self, taken_cards):
+        return [card for card in self.cards if card not in taken_cards]
+
     def add_current_round_points(
         self, taken_cards, team_index=0, has_taken_last=False, bonuses_points=0, enemy_bonuses_points=0
     ):
@@ -212,5 +228,8 @@ class Game:
 
         self.team_scores[1 - team_index].update_round(enemy_team_hand)
 
-    def get_team_points(self, team_index=0):
+    def get_team_belotscore(self, team_index=0):
         return self.team_scores[team_index].total_belotscore
+
+    def get_team_belotscore_history(self, team_index=0):
+        return self.team_scores[team_index].belotscore_history

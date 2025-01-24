@@ -10,9 +10,7 @@ class CardGameDetector:
         self.class_names = class_names
 
     def aggregate_detections(self, detections):
-        flattened = [item for sublist in detections for item in sublist]
-        counts = Counter(flattened)
-        print(flattened)
+        counts = Counter(detections)
         print(counts)
         return [key for key, count in counts.items() if count >= 3]
 
@@ -31,6 +29,18 @@ class CardGameDetector:
                 time.sleep(interval)
         detections = self.aggregate_detections(all_detections)
         return detections
+
+    def capture_a_frame(self, cap):
+        ret, frame = cap.read()
+        if ret:
+            results = self.model(frame)
+            frame_detections = []
+            for r in results:
+                for box in r.boxes:
+                    cls = int(box.cls[0])
+                    frame_detections.append(self.class_names[cls])
+            return frame_detections
+        return []
 
     def parse_card(self, detected_card):
         value = detected_card[:-1]

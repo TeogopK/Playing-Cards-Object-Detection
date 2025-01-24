@@ -1,184 +1,104 @@
+import streamlit as st
 import cv2
-import time
 from utils.game_logic import Game, GameMode
 from utils.card_game_detector import CardGameDetector
+from utils.constants import MODEL_PATH, CLASS_NAMES
 
-# Configuration
-MODEL_PATH = "../final_models/yolov8m_synthetic.pt"
-CLASS_NAMES = [
-    "10c",
-    "10d",
-    "10h",
-    "10s",
-    "2c",
-    "2d",
-    "2h",
-    "2s",
-    "3c",
-    "3d",
-    "3h",
-    "3s",
-    "4c",
-    "4d",
-    "4h",
-    "4s",
-    "5c",
-    "5d",
-    "5h",
-    "5s",
-    "6c",
-    "6d",
-    "6h",
-    "6s",
-    "7c",
-    "7d",
-    "7h",
-    "7s",
-    "8c",
-    "8d",
-    "8h",
-    "8s",
-    "9c",
-    "9d",
-    "9h",
-    "9s",
-    "Ac",
-    "Ad",
-    "Ah",
-    "As",
-    "Jc",
-    "Jd",
-    "Jh",
-    "Js",
-    "Kc",
-    "Kd",
-    "Kh",
-    "Ks",
-    "Qc",
-    "Qd",
-    "Qh",
-    "Qs",
-]
 
-# Initialize
 detector = CardGameDetector(MODEL_PATH, CLASS_NAMES)
-game = Game()
-
-# Start Webcam
-cap = cv2.VideoCapture(0)
-cap.set(3, 640)
-cap.set(4, 480)
 
 
-def print_menu():
-    print("\n--- Card Game Menu ---")
-    print("1. Set Game Mode")
-    print("2. Capture and Add Cards")
-    print("3. Sort and Display All Cards")
-    print("4. Show Team Scores")
-    print("5. Display Game Stats")
-    print("6. Add Last Hand Score")
-    print("7. Quit")
-    print("----------------------")
+if "game" not in st.session_state:
+    st.session_state.game = Game()
+if "cards_team_a" not in st.session_state:
+    st.session_state.cards_team_a = []
+if "cards_team_b" not in st.session_state:
+    st.session_state.cards_team_b = []
 
 
-def set_game_mode():
-    print("\nAvailable Game Modes:")
-    print("1. All Trumps")
-    print("2. No Trumps")
-    print("3. Spades")
-    print("4. Hearts")
-    print("5. Diamonds")
-    print("6. Clubs")
-    mode_choice = input("Choose a mode (1-6): ")
-
-    game_mode_map = {
-        "1": GameMode.ALL_TRUMPS,
-        "2": GameMode.NO_TRUMPS,
-        "3": GameMode.SPADES,
-        "4": GameMode.HEARTS,
-        "5": GameMode.DIAMONDS,
-        "6": GameMode.CLUBS,
-    }
-    game_mode = game_mode_map.get(mode_choice, GameMode.NO_TRUMPS)
-    game.change_gamemode(game_mode)
-    print(f"Game mode set to {game_mode.name}.")
+st.set_page_config(page_title="Card Game Tracker", layout="wide")
+st.title("Card Game Tracker")
 
 
-def capture_and_add_cards():
-    print("Capturing cards... Please hold steady.")
-    detected_classes = detector.capture_and_process_frames(cap)
-    detected_cards = game.sort_cards(detector.parse_cards(detected_classes))
+col1, col2 = st.columns([1, 2])
 
-    if detected_cards:
-        print(f"Detected Cards: {detected_cards}")
-        confirm = input("Do you want to accept these detected cards? (y/n): ")
-        if confirm.lower() == "y":
-            game.add_current_round_points(detected_cards)
-            print("Cards successfully added to the game.")
+
+with col1:
+    st.subheader("Team Scores")
+    team_a_scores = st.session_state.game.get_team_belotscore_history(0)
+    team_b_scores = st.session_state.game.get_team_belotscore_history(1)
+
+    table_data = []
+    for i, (team_a, team_b) in enumerate(zip(team_a_scores, team_b_scores), 1):
+        table_data.append({"Team A": team_a, "Team B": team_b})
+
+    st.table(table_data)
+
+
+with col2:
+
+    st.subheader("Stats Actions")
+
+    st.write("Cards for Team A:")
+    st.write(", ".join(str(card) for card in st.session_state.cards_team_a) if st.session_state.cards_team_a else "")
+    st.write("Cards for Team B:")
+    st.write(", ".join(str(card) for card in st.session_state.cards_team_b) if st.session_state.cards_team_b else "")
+
+    if st.button("Take Snapshot"):
+        st.write("Capturing cards... Please wait.")
+        cap = cv2.VideoCapture(0)
+        cap.set(3, 640)
+        cap.set(4, 480)
+
+        frame_placeholder = st.empty()
+        detected_classes = []
+        for i in range(10):
+            ret, frame = cap.read()
+            if ret:
+                frame_placeholder.image(frame, channels="BGR")
+                detected_classes.extend(detector.capture_a_frame(cap))
+        cap.release()
+        frame_placeholder.empty()
+        detections = detector.aggregate_detections(detected_classes)
+        detected_cards = st.session_state.game.sort_cards(detector.parse_cards(detections))
+
+        if detected_cards:
+            st.success("Cards detected successfully!")
+            st.session_state.cards_team_a = detected_cards
+            st.session_state.cards_team_b = st.session_state.game.get_other_cards(detected_cards)
         else:
-            print("Cards rejected. No changes made.")
-    else:
-        print("No valid cards detected. Try again.")
+            st.error("No valid cards detected. Please try again.")
 
+    if st.button("Flip cards"):
+        st.session_state.cards_team_a, st.session_state.cards_team_b = (
+            st.session_state.cards_team_b,
+            st.session_state.cards_team_a,
+        )
 
-def add_last_hand_score():
-    print("\n--- Last Hand Score ---")
-    add_score = input("Do you want to add the score of the last hand to the total? (y/n): ")
-    if add_score.lower() == "y":
-        game.add_current_round_scores(game.team_scores[0].cards_for_all_rounds[-1])  # Using the last round's cards
-        print("Last hand score successfully added.")
-    else:
-        print("Last hand score not added.")
+    st.markdown("---")
 
+    st.subheader("Scoring Options")
+    mode_choice = st.selectbox("Select Game Mode", ["All Trumps", "No Trumps", "Spades", "Hearts", "Diamonds", "Clubs"])
+    game_mode_map = {
+        "All Trumps": GameMode.ALL_TRUMPS,
+        "No Trumps": GameMode.NO_TRUMPS,
+        "Spades": GameMode.SPADES,
+        "Hearts": GameMode.HEARTS,
+        "Diamonds": GameMode.DIAMONDS,
+        "Clubs": GameMode.CLUBS,
+    }
+    st.session_state.game.change_gamemode(game_mode_map[mode_choice])
 
-def sort_and_display_cards():
-    sorted_cards = game.sort_cards()
-    print("\n--- Sorted Cards ---")
-    for card in sorted_cards:
-        print(card, end=" ")
-    print("\n---------------------")
+    team_a_bonus = st.number_input("Bonus Points (Team A)", min_value=0, step=1, key="bonus_a")
+    team_b_bonus = st.number_input("Bonus Points (Team B)", min_value=0, step=1, key="bonus_b")
+    team_a_last10 = st.checkbox("Team A won last 10?")
 
-
-def display_team_scores():
-    print("\n--- Team Scores ---")
-    for i, team_score in enumerate(game.team_scores):
-        print(f"Team {i + 1}: {team_score.total_points} points")
-    print("--------------------")
-
-
-def display_game_stats():
-    print("\n--- Game Stats ---")
-    print(f"Game Mode: {game.game_mode.name}")
-    print(f"Maximum Possible Points: {game.get_max_points()} points")
-    for i, team_score in enumerate(game.team_scores):
-        print(f"Team {i + 1}: {team_score.total_belotscore} points")
-        print(f"Cards for Team {i + 1}: {team_score.get_last_hand()}")
-    print("-------------------")
-
-
-# Main Menu Loop
-while True:
-    print_menu()
-    choice = input("Choose an option: ")
-
-    if choice == "1":
-        set_game_mode()
-    elif choice == "2":
-        capture_and_add_cards()
-    elif choice == "3":
-        sort_and_display_cards()
-    elif choice == "4":
-        display_team_scores()
-    elif choice == "5":
-        display_game_stats()
-    elif choice == "6":
-        add_last_hand_score()
-    elif choice == "7":
-        print("Exiting the game. Goodbye!")
-        break
-    else:
-        print("Invalid choice. Please try again.")
-
-cap.release()
-cv2.destroyAllWindows()
+    if st.button("Update Scores"):
+        st.session_state.game.add_current_round_points(
+            taken_cards=st.session_state.cards_team_a,
+            team_index=0,
+            has_taken_last=team_a_last10,
+            bonuses_points=team_a_bonus,
+            enemy_bonuses_points=team_b_bonus,
+        )
+        st.success("Scores updated successfully!")
