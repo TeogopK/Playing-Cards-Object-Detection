@@ -31,8 +31,8 @@ class Texts:
                 "game_modes": ["All Trumps", "No Trumps", "Spades", "Hearts", "Diamonds", "Clubs"],
             },
             "bg": {
-                "page_title": "Броене на Игра на Белот",
-                "title": "Броене на Игра на Белот",
+                "page_title": "Счетоводител за Игра на Белот",
+                "title": "Счетоводител за Игра на Белот",
                 "team_scores": "Резултат",
                 "stats_actions": "Извличане на ръце",
                 "team_a": "Отбор А",
