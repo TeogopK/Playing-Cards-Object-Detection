@@ -8,6 +8,7 @@ import cv2
 
 # Change to 'tuned' to use it as the default one
 DEFAULT_MODEL = "synthetic"
+SHOW_CONFIDENCE = False
 
 configuration_dict = {
     "synthetic": {
@@ -187,8 +188,8 @@ while True:
             fontScale = 1
             color = (255, 0, 0)
             thickness = 2
-
-            cv2.putText(img, class_name, org, font, fontScale, color, thickness)
+            display_text = class_name if not SHOW_CONFIDENCE else f"{class_name} {confidence}"
+            cv2.putText(img, display_text, org, font, fontScale, color, thickness)
 
     # Display total score on the screen
     score_text = f"Total Score: {total_score}"
@@ -197,6 +198,9 @@ while True:
     cv2.imshow(window_title, img)
     if cv2.waitKey(1) == ord("q"):
         break
+    if cv2.waitKey(1) == ord("s"):
+        SHOW_CONFIDENCE = not SHOW_CONFIDENCE
+
 
 cap.release()
 cv2.destroyAllWindows()
