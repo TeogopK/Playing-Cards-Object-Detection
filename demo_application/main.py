@@ -33,6 +33,7 @@ with col1:
 
     st.table(table_data)
 
+
 with col2:
     st.subheader("Stats Actions")
 
@@ -115,13 +116,30 @@ with col2:
         st.session_state.team_a_last10 = bool_10
         st.rerun()
 
-    if st.button("Update Scores"):
-        st.session_state.game.add_current_round_points(
-            taken_cards=st.session_state.cards_team_a,
-            team_index=0,
-            has_taken_last=st.session_state.team_a_last10,
-            bonuses_points=team_a_bonus,
-            enemy_bonuses_points=team_b_bonus,
-        )
-        st.success("Scores updated successfully!")
-        st.rerun()
+    sub_col1, sub_col2, sub_col3 = st.columns(3)
+
+    with sub_col1:
+        if st.button("Update Scores"):
+            st.session_state.game.add_current_round_points(
+                taken_cards=st.session_state.cards_team_a,
+                team_index=0,
+                has_taken_last=st.session_state.team_a_last10,
+                bonuses_points=team_a_bonus,
+                enemy_bonuses_points=team_b_bonus,
+            )
+            st.success("Scores updated successfully!")
+            st.rerun()
+    with sub_col2:
+        if st.button("Revert last round"):
+            st.session_state.game.revert_last_round()
+            st.success("Last round reverted successfully!")
+            st.rerun()
+
+    with sub_col3:
+        if st.button("Start new game"):
+            st.session_state.game = Game()
+            st.session_state.cards_team_a = []
+            st.session_state.cards_team_b = []
+            st.session_state.team_a_last10 = False
+            st.success("New game started successfully!")
+            st.rerun()

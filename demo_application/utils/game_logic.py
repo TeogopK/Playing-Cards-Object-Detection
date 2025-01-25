@@ -233,3 +233,18 @@ class Game:
 
     def get_team_belotscore_history(self, team_index=0):
         return self.team_scores[team_index].belotscore_history
+
+    def get_round(self):
+        return self.team_scores[0].get_total_rounds()
+
+    def start_new_game(self):
+        self.team_scores = [TeamScore(), TeamScore()]
+
+    def revert_last_round(self):
+        if self.get_round() <= 0:
+            return
+
+        for team in self.team_scores:
+            team.hands.pop()
+            team.belotscore_history.pop()
+            team.total_belotscore = team.belotscore_history[-1] if team.belotscore_history else 0
