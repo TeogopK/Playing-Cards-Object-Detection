@@ -94,12 +94,30 @@ torch.cuda.is_available()
 
 There are two models that the application can use - *YOLOv8m_synthetic* and *YOLOv8m_tuned*. Run the program specifying the model using:
 ```bash
-python demo_application/visualization.py <synthetic_or_tuned>
+python demo_application/model_visualization.py <synthetic_or_tuned>
 ```
 
 Alternatively use your IDE GUI to start the application. The app will use a default value for the model parameter
 
 To quit the program press `q` on your keyboard.
+
+View of the model predictions:
+![View of the model](demo_application/media/model_visualization.png)
+
+
+### Belot scoremanager
+
+Or run the Streamlit application that helps you track your Belot game score:
+
+```bash
+streamlit run demo_application/main.py
+```
+
+View of the English version:
+![Streamlit View of the English version](demo_application/media/streamlit_gui_english.png)
+
+And the Bulgarian one:
+![Streamlit View of the Bulgarian version](demo_application/media/streamlit_gui_bulgarian.png)
 
 ## Presentations and research paper
 
