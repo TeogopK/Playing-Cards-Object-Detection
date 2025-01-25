@@ -16,10 +16,10 @@ def initialize_session_state():
         st.session_state.cards_team_b = []
     if "team_a_last10" not in st.session_state:
         st.session_state.team_a_last10 = False
-    if "current_game_mode" not in st.session_state:
-        st.session_state.current_game_mode = "All Trumps"
+    if "current_game_mode_index" not in st.session_state:
+        st.session_state.current_game_mode_index = 0
     if "language" not in st.session_state:
-        st.session_state.language = "en"  # Default language
+        st.session_state.language = "en"
     if "texts" not in st.session_state:
         st.session_state.texts = Texts(language=st.session_state.language)
 
@@ -83,9 +83,9 @@ def handle_game_mode_change(mode_choice):
         texts.get_modes()[5]: GameMode.CLUBS,
     }
 
-    if mode_choice != st.session_state.current_game_mode:
+    if mode_choice != texts.get_modes()[st.session_state.current_game_mode_index]:
         st.session_state.game.change_gamemode(game_mode_map[mode_choice])
-        st.session_state.current_game_mode = mode_choice
+        st.session_state.current_game_mode_index = texts.get_modes().index(mode_choice)
 
         st.session_state.cards_team_a = st.session_state.game.sort_cards(st.session_state.cards_team_a)
         st.session_state.cards_team_b = st.session_state.game.sort_cards(st.session_state.cards_team_b)
@@ -148,7 +148,13 @@ def main():
 
         st.subheader(texts.get("scoring_options"))
 
-        mode_choice = st.selectbox(texts.get("game_mode"), texts.get_modes())
+        mode_choice = st.selectbox(
+            texts.get("game_mode"),
+            texts.get_modes(),
+            key="game_mode_select",
+            index=st.session_state.current_game_mode_index,
+        )
+
         handle_game_mode_change(mode_choice)
 
         team_a_bonus = st.number_input(texts.get("bonus_points_team_a"), min_value=0, step=1, key="bonus_a")
