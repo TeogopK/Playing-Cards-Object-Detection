@@ -99,7 +99,7 @@ python demo_application/model_visualization.py <synthetic_or_tuned>
 
 Alternatively use your IDE GUI to start the application. The app will use a default value for the model parameter
 
-To quit the program press `q` on your keyboard.
+To quit the program press `q` on your keyboard, to toggle confidence label press `s`.
 
 View of the model predictions:
 ![View of the model](demo_application/media/model_visualization.png)
