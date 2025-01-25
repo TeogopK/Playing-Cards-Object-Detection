@@ -25,7 +25,7 @@ class Texts:
                 "team_a_last_10": "Team A won last 10?",
                 "update_scores": "Update Scores",
                 "scores_updated": "Scores updated successfully!",
-                "last_round_reverted": "Last round reverted successfully!",
+                "revert_last_round": "Revert last round",
                 "start_new_game": "Start new game",
                 "new_game_started": "New game started successfully!",
                 "game_modes": ["All Trumps", "No Trumps", "Spades", "Hearts", "Diamonds", "Clubs"],
