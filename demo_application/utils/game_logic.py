@@ -211,7 +211,7 @@ class Game:
         )
 
     def get_other_cards(self, taken_cards):
-        return [card for card in self.cards if card not in taken_cards]
+        return [card for card in self.cards if str(card) not in [str(taken_card) for taken_card in taken_cards]]
 
     def add_current_round_points(
         self, taken_cards, team_index=0, has_taken_last=False, bonuses_points=0, enemy_bonuses_points=0
