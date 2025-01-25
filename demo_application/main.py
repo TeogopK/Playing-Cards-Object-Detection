@@ -99,21 +99,22 @@ def main():
     st.set_page_config(page_title=texts.get("page_title"), layout="wide")
     st.title(texts.get("title"))
 
-    language_choice = st.selectbox("Select Language", ["English", "Български"], key="language_selection")
-
-    language_map = {"English": "en", "Български": "bg"}
-    if language_map[language_choice] != st.session_state.language:
-        st.session_state.language = language_map[language_choice]
-        change_language()
-        st.rerun()
-
     col1, spacer, col2 = st.columns([1, 0.2, 2])
     with col1:
         st.subheader(texts.get("team_scores"))
         display_team_scores()
 
     with col2:
-        st.subheader(texts.get("stats_actions"))
+        subcol1, subcol2 = st.columns([9, 1])
+
+        with subcol1:
+            st.subheader(texts.get("stats_actions"))
+
+        with subcol2:
+            if st.button("🇬🇧 / 🇧🇬"):
+                st.session_state.language = "bg" if st.session_state.language == "en" else "en"
+                change_language()
+                st.rerun()
 
         st.write(
             f"{texts.get('cards_team_a')} - {st.session_state.game.get_points(st.session_state.cards_team_a, st.session_state.team_a_last10)} {texts.get('points')}:"
