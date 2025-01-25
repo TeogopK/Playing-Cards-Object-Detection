@@ -3,9 +3,11 @@ import cv2
 from utils.game_logic import Game, GameMode
 from utils.card_game_detector import CardGameDetector
 from utils.constants import MODEL_PATH, CLASS_NAMES
+from utils.text_constants import Texts
 
 
 def initialize_session_state():
+    """Initialize Streamlit session state variables."""
     if "game" not in st.session_state:
         st.session_state.game = Game()
     if "cards_team_a" not in st.session_state:
@@ -16,18 +18,34 @@ def initialize_session_state():
         st.session_state.team_a_last10 = False
     if "current_game_mode" not in st.session_state:
         st.session_state.current_game_mode = "All Trumps"
+    if "language" not in st.session_state:
+        st.session_state.language = "en"  # Default language
+    if "texts" not in st.session_state:
+        st.session_state.texts = Texts(language=st.session_state.language)
+
+
+def change_language():
+    """Change the language in session state."""
+    st.session_state.texts = Texts(language=st.session_state.language)
 
 
 def display_team_scores():
+    """Display the team scores table."""
+    texts = st.session_state.texts
     team_a_scores = st.session_state.game.get_team_belotscore_history(0)
     team_b_scores = st.session_state.game.get_team_belotscore_history(1)
 
-    table_data = [{"Team A": team_a, "Team B": team_b} for team_a, team_b in zip(team_a_scores, team_b_scores)]
+    table_data = [
+        {texts.get("team_a"): team_a, texts.get("team_b"): team_b}
+        for team_a, team_b in zip(team_a_scores, team_b_scores)
+    ]
     st.table(table_data)
 
 
 def capture_cards(detector):
-    st.write("Capturing cards... Please wait.")
+    """Capture cards using the webcam and process detections."""
+    texts = st.session_state.texts
+    st.write(texts.get("capturing_cards"))
     cap = cv2.VideoCapture(0)
     cap.set(3, 640)
     cap.set(4, 480)
@@ -46,55 +64,65 @@ def capture_cards(detector):
     detected_cards = st.session_state.game.sort_cards(detector.parse_cards(detections))
 
     if detected_cards:
-        st.success("Cards detected successfully!")
+        st.success(texts.get("cards_detected"))
         st.session_state.cards_team_a = detected_cards
         st.session_state.cards_team_b = st.session_state.game.get_other_cards(detected_cards)
     else:
-        st.error("No valid cards detected. Please try again.")
+        st.error(texts.get("no_cards_detected"))
 
 
 def handle_game_mode_change(mode_choice):
+    """Handle changes to the selected game mode."""
+    texts = st.session_state.texts
     game_mode_map = {
-        "All Trumps": GameMode.ALL_TRUMPS,
-        "No Trumps": GameMode.NO_TRUMPS,
-        "Spades": GameMode.SPADES,
-        "Hearts": GameMode.HEARTS,
-        "Diamonds": GameMode.DIAMONDS,
-        "Clubs": GameMode.CLUBS,
+        texts.get_modes()[0]: GameMode.ALL_TRUMPS,
+        texts.get_modes()[1]: GameMode.NO_TRUMPS,
+        texts.get_modes()[2]: GameMode.SPADES,
+        texts.get_modes()[3]: GameMode.HEARTS,
+        texts.get_modes()[4]: GameMode.DIAMONDS,
+        texts.get_modes()[5]: GameMode.CLUBS,
     }
 
     if mode_choice != st.session_state.current_game_mode:
         st.session_state.game.change_gamemode(game_mode_map[mode_choice])
         st.session_state.current_game_mode = mode_choice
+
         st.session_state.cards_team_a = st.session_state.game.sort_cards(st.session_state.cards_team_a)
         st.session_state.cards_team_b = st.session_state.game.sort_cards(st.session_state.cards_team_b)
-        st.rerun()
 
 
 def main():
-    detector = CardGameDetector(MODEL_PATH, CLASS_NAMES)
     initialize_session_state()
+    texts = st.session_state.texts
+    detector = CardGameDetector(MODEL_PATH, CLASS_NAMES)
 
-    st.set_page_config(page_title="Card Game Tracker", layout="wide")
-    st.title("Card Game Tracker")
+    st.set_page_config(page_title=texts.get("page_title"), layout="wide")
+    st.title(texts.get("title"))
+
+    language_choice = st.selectbox("Select Language", ["English", "Български"], key="language_selection")
+
+    language_map = {"English": "en", "Български": "bg"}
+    if language_map[language_choice] != st.session_state.language:
+        st.session_state.language = language_map[language_choice]
+        change_language()
+        st.rerun()
 
     col1, spacer, col2 = st.columns([1, 0.2, 2])
-
     with col1:
-        st.subheader("Team Scores")
+        st.subheader(texts.get("team_scores"))
         display_team_scores()
 
     with col2:
-        st.subheader("Stats Actions")
+        st.subheader(texts.get("stats_actions"))
 
         st.write(
-            f"Cards for Team A - {st.session_state.game.get_points(st.session_state.cards_team_a, st.session_state.team_a_last10)} points:"
+            f"{texts.get('cards_team_a')} - {st.session_state.game.get_points(st.session_state.cards_team_a, st.session_state.team_a_last10)} {texts.get('points')}:"
         )
         st.write(
             ", ".join(str(card) for card in st.session_state.cards_team_a) if st.session_state.cards_team_a else ""
         )
         st.write(
-            f"Cards for Team B - {st.session_state.game.get_points(st.session_state.cards_team_b, not st.session_state.team_a_last10)} points:"
+            f"{texts.get('cards_team_b')} - {st.session_state.game.get_points(st.session_state.cards_team_b, not st.session_state.team_a_last10)} {texts.get('points')}:"
         )
         st.write(
             ", ".join(str(card) for card in st.session_state.cards_team_b) if st.session_state.cards_team_b else ""
@@ -102,12 +130,12 @@ def main():
 
         sub_col1, sub_col2 = st.columns(2)
         with sub_col1:
-            if st.button("Take Snapshot"):
+            if st.button(texts.get("take_snapshot")):
                 capture_cards(detector)
                 st.rerun()
 
         with sub_col2:
-            if st.button("Flip cards"):
+            if st.button(texts.get("flip_cards")):
                 st.session_state.cards_team_a, st.session_state.cards_team_b = (
                     st.session_state.cards_team_b,
                     st.session_state.cards_team_a,
@@ -116,17 +144,15 @@ def main():
 
         st.markdown("---")
 
-        st.subheader("Scoring Options")
+        st.subheader(texts.get("scoring_options"))
 
-        mode_choice = st.selectbox(
-            "Select Game Mode", ["All Trumps", "No Trumps", "Spades", "Hearts", "Diamonds", "Clubs"]
-        )
+        mode_choice = st.selectbox(texts.get("game_mode"), texts.get_modes())
         handle_game_mode_change(mode_choice)
 
-        team_a_bonus = st.number_input("Bonus Points (Team A)", min_value=0, step=1, key="bonus_a")
-        team_b_bonus = st.number_input("Bonus Points (Team B)", min_value=0, step=1, key="bonus_b")
+        team_a_bonus = st.number_input(texts.get("bonus_points_team_a"), min_value=0, step=1, key="bonus_a")
+        team_b_bonus = st.number_input(texts.get("bonus_points_team_b"), min_value=0, step=1, key="bonus_b")
 
-        bool_10 = st.checkbox("Team A won last 10?", value=st.session_state.team_a_last10)
+        bool_10 = st.checkbox(texts.get("team_a_last_10"), value=st.session_state.team_a_last10)
 
         if bool_10 != st.session_state.team_a_last10:
             st.session_state.team_a_last10 = bool_10
@@ -135,7 +161,7 @@ def main():
         sub_col1, sub_col2, sub_col3 = st.columns(3)
 
         with sub_col1:
-            if st.button("Update Scores"):
+            if st.button(texts.get("update_scores")):
                 st.session_state.game.add_current_round_points(
                     taken_cards=st.session_state.cards_team_a,
                     team_index=0,
@@ -143,21 +169,21 @@ def main():
                     bonuses_points=team_a_bonus,
                     enemy_bonuses_points=team_b_bonus,
                 )
-                st.success("Scores updated successfully!")
+                st.success(texts.get("scores_updated"))
                 st.rerun()
         with sub_col2:
-            if st.button("Revert last round"):
+            if st.button(texts.get("revert_last_round")):
                 st.session_state.game.revert_last_round()
-                st.success("Last round reverted successfully!")
+                st.success(texts.get("last_round_reverted"))
                 st.rerun()
 
         with sub_col3:
-            if st.button("Start new game"):
+            if st.button(texts.get("start_new_game")):
                 st.session_state.game = Game()
                 st.session_state.cards_team_a = []
                 st.session_state.cards_team_b = []
                 st.session_state.team_a_last10 = False
-                st.success("New game started successfully!")
+                st.success(texts.get("new_game_started"))
                 st.rerun()
 
 
