@@ -89,6 +89,7 @@ def handle_game_mode_change(mode_choice):
 
         st.session_state.cards_team_a = st.session_state.game.sort_cards(st.session_state.cards_team_a)
         st.session_state.cards_team_b = st.session_state.game.sort_cards(st.session_state.cards_team_b)
+        st.rerun()
 
 
 def main():
